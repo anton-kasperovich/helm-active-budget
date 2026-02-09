@@ -11,6 +11,10 @@ spec:
       {{- include "active-budget.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        {{- if .Values.otelInstrumentation.enabled }}
+        instrumentation.opentelemetry.io/inject-sdk: "pi-instrumentation"
+        {{- end }}
       labels:
         {{- include "active-budget.selectorLabels" . | nindent 8 }}
         {{- if .Values.podAnnotations }}
