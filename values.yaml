@@ -43,7 +43,7 @@ ingress:
   className: "traefik"
   annotations: {}
   hosts:
-    - host: active-budget.local
+    - host: budget.labpi5.fyi
       paths:
         - path: /
           pathType: Prefix
