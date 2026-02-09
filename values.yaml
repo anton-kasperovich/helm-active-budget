@@ -1,0 +1,50 @@
+# App settings
+image:
+  repository: docker.io/actualbudget/actual-server
+  tag: "latest"
+  pullPolicy: Always
+
+# Deployment settings
+replicaCount: 1
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5006
+
+# Storage settings for k3s local-path
+persistence:
+  enabled: true
+  storageClass: "local-path"  # k3s default for local storage
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  mountPath: /data  # Adjust based on app needs
+
+# Resource limits (optional for k3s)
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+# Healthcheck settings
+healthcheck:
+  enabled: true
+  test: ["node", "src/scripts/health-check.js"]
+  interval: 60
+  timeout: 10
+  retries: 3
+  start_period: 20
+
+# Ingress settings
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations: {}
+  hosts:
+    - host: active-budget.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []

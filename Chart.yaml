@@ -1,0 +1,6 @@
+apiVersion: v2
+name: active-budget
+description: A Helm chart for active-budget app on k3s with local storage
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

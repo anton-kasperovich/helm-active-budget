@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "active-budget.fullname" . }}
+  labels:
+    {{- include "active-budget.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "active-budget.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "active-budget.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+          name: http
+        env:
+        - name: ACTUAL_PORT
+          value: "5006"
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        {{- if .Values.healthcheck.enabled }}
+        livenessProbe:
+          exec:
+            command: {{ .Values.healthcheck.test | toJson }}
+          initialDelaySeconds: {{ .Values.healthcheck.start_period }}
+          periodSeconds: {{ .Values.healthcheck.interval }}
+          timeoutSeconds: {{ .Values.healthcheck.timeout }}
+          failureThreshold: {{ .Values.healthcheck.retries }}
+        readinessProbe:
+          exec:
+            command: {{ .Values.healthcheck.test | toJson }}
+          initialDelaySeconds: {{ .Values.healthcheck.start_period }}
+          periodSeconds: {{ .Values.healthcheck.interval }}
+          timeoutSeconds: {{ .Values.healthcheck.timeout }}
+          failureThreshold: {{ .Values.healthcheck.retries }}
+        {{- end }}
+        {{- if .Values.persistence.enabled }}
+        volumeMounts:
+        - name: storage
+          mountPath: {{ .Values.persistence.mountPath }}
+        {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ include "active-budget.fullname" . }}-pvc
+      {{- end }}
