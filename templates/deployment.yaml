@@ -13,6 +13,12 @@ spec:
     metadata:
       labels:
         {{- include "active-budget.selectorLabels" . | nindent 8 }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end }}
+        {{- if .Values.otelInstrumentation.enabled }}
+        instrumentation.opentelemetry.io/inject-sdk: "pi-instrumentation"
+        {{- end }}
     spec:
       containers:
       - name: {{ .Chart.Name }}

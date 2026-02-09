@@ -37,6 +37,10 @@ healthcheck:
   retries: 3
   start_period: 20
 
+# OpenTelemetry instrumentation settings
+otelInstrumentation:
+  enabled: true
+
 # Ingress settings
 ingress:
   enabled: true
