@@ -45,10 +45,14 @@ otelInstrumentation:
 ingress:
   enabled: true
   className: "traefik"
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
     - host: budget.labpi5.fyi
       paths:
         - path: /
           pathType: Prefix
-  tls: []
+  tls:
+    - hosts:
+        - budget.labpi5.fyi
+      secretName: budget-labpi5-fyi-tls
