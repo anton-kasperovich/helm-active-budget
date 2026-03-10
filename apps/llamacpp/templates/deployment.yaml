@@ -16,6 +16,7 @@ spec:
       containers:
         - name: llama-cpp
           image: {{ .Values.deployment.image }}
+          command: [{{ .Values.deployment.command | quote }}]
           args:
             - "-m"
             - {{ .Values.deployment.modelFile | quote }}
