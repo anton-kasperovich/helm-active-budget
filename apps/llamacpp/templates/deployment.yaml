@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      containers:
+        - name: llama-cpp
+          image: {{ .Values.deployment.image }}
+          args:
+            - "-m"
+            - {{ .Values.deployment.modelFile | quote }}
+            - "--host"
+            - {{ .Values.deployment.host | quote }}
+            - "--port"
+            - {{ .Values.deployment.port | quote }}
+            - "-c"
+            - {{ .Values.deployment.contextSize | quote }}
+            - "-np"
+            - {{ .Values.deployment.parallelSlots | quote }}
+          ports:
+            - containerPort: {{ .Values.deployment.port }}
+          volumeMounts:
+            - name: {{ .Values.volume.name }}
+              mountPath: /models
+          resources:
+{{ toYaml .Values.deployment.resources | indent 12 }}
+      volumes:
+        - name: {{ .Values.volume.name }}
+          hostPath:
+            path: {{ .Values.volume.hostPath }}
+            type: {{ .Values.volume.type }}

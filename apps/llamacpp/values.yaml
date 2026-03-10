@@ -1,0 +1,36 @@
+# Default values for llamacpp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Namespace
+namespace: llama
+
+# Service configuration
+service:
+  name: llama-api
+  type: LoadBalancer
+  port: 8080
+  targetPort: 8080
+
+# Deployment configuration
+deployment:
+  name: llama-server
+  replicas: 1
+  image: ghcr.io/ggerganov/llama.cpp:server
+  modelFile: "/models/ggml-org_gemma-3-1b-it-GGUF_gemma-3-1b-it-Q4_K_M.gguf"
+  host: "0.0.0.0"
+  port: 8080
+  contextSize: 4096
+  parallelSlots: 2
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "2000m"
+    limits:
+      memory: "4Gi"
+
+# Volume configuration
+volume:
+  name: model-storage
+  hostPath: "/home/iniweb/llm-models"
+  type: Directory
