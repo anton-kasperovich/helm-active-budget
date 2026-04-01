@@ -28,10 +28,6 @@ spec:
             - {{ .Values.deployment.contextSize | quote }}
             - "-np"
             - {{ .Values.deployment.parallelSlots | quote }}
-            - "--ctk"
-            - {{ .Values.deployment.cacheTypeK | quote }}
-            - "--ctv"
-            - {{ .Values.deployment.cacheTypeV | quote }}
             {{- if .Values.deployment.enableJinja }}
             - "--jinja"
             {{- end }}
