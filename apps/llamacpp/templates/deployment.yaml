@@ -28,6 +28,11 @@ spec:
             - {{ .Values.deployment.contextSize | quote }}
             - "-np"
             - {{ .Values.deployment.parallelSlots | quote }}
+            {{- if .Values.deployment.enableJinja }}
+            - "--jinja"
+            {{- end }}
+            - "--chat-template"
+            - {{ .Values.deployment.chatTemplate | quote }}
           ports:
             - containerPort: {{ .Values.deployment.port }}
           volumeMounts:
