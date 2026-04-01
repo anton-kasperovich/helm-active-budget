@@ -22,16 +22,16 @@ deployment:
   host: "0.0.0.0"
   port: 8080
   contextSize: 8192
-  parallelSlots: 2
+  parallelSlots: 1
   enableJinja: true
   chatTemplate: "phi3"
   resources:
     requests:
-      memory: "2Gi"
-      cpu: "500m"   # Low request so scheduler can place the pod
+      memory: "3.5Gi"
+      cpu: "1000m"
     limits:
-      memory: "4Gi"
-      cpu: "3500m"  # Leave ~0.5 core for OS/other pods on RPi5 quad-core
+      memory: "5Gi"
+      cpu: "3800m"
 
 # Volume configuration
 volume:
